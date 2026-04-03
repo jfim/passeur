@@ -1,0 +1,29 @@
+defmodule Passeur.Application do
+  @moduledoc false
+
+  use Application
+
+  @impl true
+  def start(_type, _args) do
+    # Set boruta defaults if not already configured
+    boruta_config = Application.get_env(:boruta, Boruta.Oauth, [])
+    boruta_config = Keyword.put_new(boruta_config, :repo, Passeur.Repo)
+    boruta_contexts = Keyword.get(boruta_config, :contexts, [])
+    boruta_contexts = Keyword.put_new(boruta_contexts, :resource_owners, Passeur.ResourceOwners)
+    boruta_config = Keyword.put(boruta_config, :contexts, boruta_contexts)
+    Application.put_env(:boruta, Boruta.Oauth, boruta_config)
+
+    port = Application.get_env(:passeur, :port, 4000)
+    mcp_server = Application.get_env(:passeur, :mcp_server, Passeur.MCPServer)
+
+    children = [
+      Passeur.Repo,
+      Hermes.Server.Registry,
+      {mcp_server, transport: {:streamable_http, start: true}},
+      {Bandit, plug: Passeur.Router, port: port}
+    ]
+
+    opts = [strategy: :one_for_one, name: Passeur.Supervisor]
+    Supervisor.start_link(children, opts)
+  end
+end
