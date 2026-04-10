@@ -1,5 +1,5 @@
 defmodule Passeur.Tools.Hello do
-  use Hermes.Server.Component, type: :tool
+  use Anubis.Server.Component, type: :tool
 
   @moduledoc "A simple greeting tool"
 
@@ -10,8 +10,8 @@ defmodule Passeur.Tools.Hello do
   @impl true
   def execute(%{name: name}, frame) do
     {:reply,
-     Hermes.Server.Response.tool()
-     |> Hermes.Server.Response.text("Hello, #{name}! Welcome to Passeur."),
+     Anubis.Server.Response.tool()
+     |> Anubis.Server.Response.text("Hello, #{name}! Welcome to Passeur."),
      frame}
   end
 end

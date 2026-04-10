@@ -32,7 +32,7 @@ defmodule Passeur.MixProject do
 
   defp deps do
     [
-      {:hermes_mcp, "~> 0.14.1"},
+      {:anubis_mcp, "~> 1.0"},
       {:boruta, "~> 3.0.0-beta.4"},
       {:plug, "~> 1.19"},
       {:bandit, "~> 1.10"},

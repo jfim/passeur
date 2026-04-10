@@ -18,7 +18,6 @@ defmodule Passeur.Application do
 
     children = [
       Passeur.Repo,
-      Hermes.Server.Registry,
       {mcp_server, transport: {:streamable_http, start: true}},
       {Bandit, plug: Passeur.Router, port: port}
     ]
