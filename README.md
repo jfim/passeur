@@ -13,6 +13,12 @@ Self-hosted Elixir MCP server framework with OAuth 2.1 and Dynamic Client Regist
 - **CORS support** for cross-origin MCP clients
 - **Ecto/Postgres** for OAuth client and token storage
 
+## Requirements
+
+- Postgres for OAuth DCR and token storage.
+- External SSL termination through nginx, Caddy, Cloudflare Tunnel, etc.
+- Docker if you want to deploy this as a container
+
 ## Quick Start
 
 1. Create a new Elixir project:
