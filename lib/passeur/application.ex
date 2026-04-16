@@ -19,7 +19,8 @@ defmodule Passeur.Application do
     children = [
       Passeur.Repo,
       {mcp_server, transport: {:streamable_http, start: true}},
-      {Bandit, plug: Passeur.Router, port: port}
+      {Bandit,
+       plug: Passeur.Router, port: port, thousand_island_options: [read_timeout: :infinity]}
     ]
 
     opts = [strategy: :one_for_one, name: Passeur.Supervisor]
