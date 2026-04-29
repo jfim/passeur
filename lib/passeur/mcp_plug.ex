@@ -14,7 +14,13 @@ defmodule Passeur.MCPPlug do
 
     unless conn.halted do
       mcp_server = Application.get_env(:passeur, :mcp_server, Passeur.MCPServer)
-      opts = Anubis.Server.Transport.StreamableHTTP.Plug.init(server: mcp_server)
+
+      opts =
+        Anubis.Server.Transport.StreamableHTTP.Plug.init(
+          server: mcp_server,
+          force_json_responses: true
+        )
+
       Anubis.Server.Transport.StreamableHTTP.Plug.call(conn, opts)
     else
       conn
