@@ -10,7 +10,10 @@ defmodule Passeur.Plugs.BearerAuth do
   def init(opts), do: opts
 
   def call(conn, _opts) do
-    case get_bearer_token(conn) do
+    case authenticate(conn) do
+      {:ok, :static} ->
+        assign(conn, :oauth_token, %{static: true})
+
       {:ok, %{expires_at: expires_at} = token} ->
         if expires_at > :os.system_time(:second) do
           assign(conn, :oauth_token, token)
@@ -25,12 +28,16 @@ defmodule Passeur.Plugs.BearerAuth do
     end
   end
 
-  defp get_bearer_token(conn) do
+  defp authenticate(conn) do
     case get_req_header(conn, "authorization") do
       ["Bearer " <> token_value] when token_value != "" ->
-        case Boruta.Config.access_tokens().get_by(value: token_value) do
-          %{} = token -> {:ok, token}
-          nil -> {:error, "token not found"}
+        if static_token_match?(token_value) do
+          {:ok, :static}
+        else
+          case Boruta.Config.access_tokens().get_by(value: token_value) do
+            %{} = token -> {:ok, token}
+            nil -> {:error, "token not found"}
+          end
         end
 
       [] ->
@@ -39,6 +46,12 @@ defmodule Passeur.Plugs.BearerAuth do
       _ ->
         {:error, "invalid authorization header"}
     end
+  end
+
+  defp static_token_match?(token_value) do
+    :passeur
+    |> Application.get_env(:static_bearer_tokens, [])
+    |> Enum.any?(&Plug.Crypto.secure_compare(&1, token_value))
   end
 
   defp unauthorized(conn) do

@@ -151,6 +151,17 @@ All configuration is read from environment variables in `config/runtime.exs`:
 | `SERVER_URL` | Yes | Public URL (e.g. `https://mcp.example.com`) |
 | `PORT` | No | HTTP port (default: 4000) |
 | `POOL_SIZE` | No | DB pool size (default: 10) |
+| `PASSEUR_STATIC_BEARER_TOKENS` | No | Comma-separated static bearer tokens accepted alongside Boruta-issued OAuth tokens (see below) |
+
+### Static Bearer Tokens
+
+In addition to OAuth access tokens issued by the embedded Boruta authorization server, passeur can accept a configured list of static bearer tokens on the `/mcp` endpoint. This is useful for service-to-service callers that don't run an OAuth flow — give each service its own token and rotate by redeploying with the new value appended, then removing the old.
+
+```bash
+PASSEUR_STATIC_BEARER_TOKENS=svc-a-xxxxxxxx,svc-b-yyyyyyyy
+```
+
+Static tokens are checked with constant-time comparison before falling through to Boruta. Requests authenticated with a static token are assigned `%{static: true}` rather than an OAuth token struct. Leave the variable unset to disable.
 
 ## Composing Multiple MCP Servers
 
