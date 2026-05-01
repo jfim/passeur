@@ -35,20 +35,12 @@ if config_env() == :prod do
     raise "SERVER_URL must not contain a path (got #{inspect(server_url)}). Use the root URL only, e.g. https://mcp.example.com"
   end
 
-  static_bearer_tokens =
-    case System.get_env("PASSEUR_STATIC_BEARER_TOKENS") do
-      nil -> []
-      "" -> []
-      raw -> raw |> String.split(",", trim: true) |> Enum.map(&String.trim/1) |> Enum.reject(&(&1 == ""))
-    end
-
   config :passeur,
     port: port,
     admin_username: admin_username,
     admin_password_hash: admin_password_hash,
     secret_key_base: secret_key_base,
-    server_url: server_url,
-    static_bearer_tokens: static_bearer_tokens
+    server_url: server_url
 
   config :boruta, Boruta.Oauth,
     issuer: server_url
