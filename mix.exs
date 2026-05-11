@@ -32,7 +32,7 @@ defmodule Passeur.MixProject do
 
   defp deps do
     [
-      {:anubis_mcp, "~> 1.0"},
+      {:anubis_mcp, git: "https://github.com/jfim/anubis-mcp.git", branch: "non-upstreamed-fixes", override: true},
       {:boruta, "~> 3.0.0-beta.4"},
       {:plug, "~> 1.19"},
       {:bandit, "~> 1.10"},
