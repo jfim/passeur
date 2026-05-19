@@ -7,13 +7,19 @@ defmodule Passeur.RegistrationController do
     token_endpoint_auth_method jwks jwks_uri contacts client_uri scope
     supported_grant_types name confidential pkce)
 
+  @one_year_seconds 60 * 60 * 24 * 365
+
   def register(conn) do
     registration_params =
       conn.body_params
-      |> Map.put_new("grant_types", ["authorization_code"])
+      |> Map.put_new("grant_types", ["authorization_code", "refresh_token"])
       |> Map.put_new("response_types", ["code"])
       |> Map.delete("token_endpoint_auth_method")
       |> atomize_known_keys()
+      |> Map.put(:access_token_ttl, @one_year_seconds)
+      |> Map.put(:refresh_token_ttl, @one_year_seconds)
+      |> Map.put(:public_refresh_token, true)
+      |> Map.put(:pkce, true)
 
     Boruta.Openid.register_client(conn, registration_params, __MODULE__)
   end
