@@ -11,6 +11,19 @@ defmodule Passeur.Application do
     boruta_contexts = Keyword.get(boruta_config, :contexts, [])
     boruta_contexts = Keyword.put_new(boruta_contexts, :resource_owners, Passeur.ResourceOwners)
     boruta_config = Keyword.put(boruta_config, :contexts, boruta_contexts)
+
+    # Raise the per-token max TTLs to 1 year so dynamically-registered
+    # public clients (claude.ai, Claude Desktop) don't fall off after
+    # Boruta's default 24h/30d caps.
+    one_year = 60 * 60 * 24 * 365
+    existing_max_ttl = Keyword.get(boruta_config, :max_ttl, [])
+
+    max_ttl =
+      existing_max_ttl
+      |> Keyword.put_new(:access_token, one_year)
+      |> Keyword.put_new(:refresh_token, one_year)
+
+    boruta_config = Keyword.put(boruta_config, :max_ttl, max_ttl)
     Application.put_env(:boruta, Boruta.Oauth, boruta_config)
 
     load_static_bearer_tokens()
