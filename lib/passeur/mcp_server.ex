@@ -1,4 +1,6 @@
 defmodule Passeur.MCPServer do
+  @moduledoc false
+
   use Anubis.Server,
     name: "Passeur",
     version: "0.1.0",

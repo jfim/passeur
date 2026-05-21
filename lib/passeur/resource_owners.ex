@@ -1,4 +1,6 @@
 defmodule Passeur.ResourceOwners do
+  @moduledoc false
+
   @behaviour Boruta.Oauth.ResourceOwners
 
   alias Boruta.Oauth.ResourceOwner

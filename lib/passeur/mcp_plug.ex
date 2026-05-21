@@ -12,7 +12,9 @@ defmodule Passeur.MCPPlug do
   def call(conn, _opts) do
     conn = Passeur.Plugs.BearerAuth.call(conn, [])
 
-    unless conn.halted do
+    if conn.halted do
+      conn
+    else
       mcp_server = Application.get_env(:passeur, :mcp_server, Passeur.MCPServer)
 
       opts =
@@ -22,8 +24,6 @@ defmodule Passeur.MCPPlug do
         )
 
       Anubis.Server.Transport.StreamableHTTP.Plug.call(conn, opts)
-    else
-      conn
     end
   end
 end
