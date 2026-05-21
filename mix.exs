@@ -10,7 +10,8 @@ defmodule Passeur.MixProject do
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       package: package(),
-      source_url: "https://github.com/jfim/passeur"
+      source_url: "https://github.com/jfim/passeur",
+      dialyzer: [plt_add_apps: [:mix]]
     ]
   end
 
