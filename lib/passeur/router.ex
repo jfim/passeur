@@ -1,26 +1,28 @@
 defmodule Passeur.Router do
   use Plug.Router
 
-  plug Plug.Logger
-  plug :cors_headers
-  plug :put_secret_key_base
-  plug :match
+  plug(Plug.Logger)
+  plug(:cors_headers)
+  plug(:put_secret_key_base)
+  plug(:match)
 
-  plug Plug.Parsers,
+  plug(Plug.Parsers,
     parsers: [:urlencoded, :json],
     pass: ["application/x-www-form-urlencoded", "application/json", "text/event-stream"],
     json_decoder: Jason
+  )
 
-  plug Plug.Session,
+  plug(Plug.Session,
     store: :cookie,
     key: "_passeur_session",
     signing_salt: "passeur_signing_salt",
     encryption_salt: "passeur_encryption_salt",
     same_site: "Strict",
     http_only: true
+  )
 
-  plug :fetch_session
-  plug :dispatch
+  plug(:fetch_session)
+  plug(:dispatch)
 
   def secret_key_base do
     Application.get_env(:passeur, :secret_key_base) ||
@@ -32,7 +34,7 @@ defmodule Passeur.Router do
   end
 
   # CORS preflight
-  match _ , via: :options do
+  match _, via: :options do
     send_resp(conn, 204, "")
   end
 
@@ -113,7 +115,7 @@ defmodule Passeur.Router do
   end
 
   # MCP endpoint (protected by Bearer token)
-  forward "/mcp", to: Passeur.MCPPlug
+  forward("/mcp", to: Passeur.MCPPlug)
 
   match _ do
     conn
@@ -125,7 +127,10 @@ defmodule Passeur.Router do
     conn
     |> put_resp_header("access-control-allow-origin", "*")
     |> put_resp_header("access-control-allow-methods", "GET, POST, DELETE, OPTIONS")
-    |> put_resp_header("access-control-allow-headers", "content-type, authorization, accept, mcp-session-id")
+    |> put_resp_header(
+      "access-control-allow-headers",
+      "content-type, authorization, accept, mcp-session-id"
+    )
     |> put_resp_header("access-control-expose-headers", "mcp-session-id")
     |> put_resp_header("access-control-max-age", "3600")
   end

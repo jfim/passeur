@@ -42,6 +42,5 @@ if config_env() == :prod do
     secret_key_base: secret_key_base,
     server_url: server_url
 
-  config :boruta, Boruta.Oauth,
-    issuer: server_url
+  config :boruta, Boruta.Oauth, issuer: server_url
 end

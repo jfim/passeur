@@ -4,7 +4,8 @@ config :passeur,
   port: 4000,
   admin_username: "admin",
   admin_password_hash: "$argon2id$v=19$m=65536,t=3,p=4$placeholder",
-  secret_key_base: "dev_only_change_me_in_production_at_least_64_bytes_long_xxxxxxxxxxxxxxxxxxxxxxxxxx"
+  secret_key_base:
+    "dev_only_change_me_in_production_at_least_64_bytes_long_xxxxxxxxxxxxxxxxxxxxxxxxxx"
 
 config :passeur, Passeur.Repo,
   username: "passeur",
@@ -18,5 +19,4 @@ config :passeur, Passeur.Repo,
 config :passeur,
   server_url: "http://localhost:4000"
 
-config :boruta, Boruta.Oauth,
-  issuer: "http://localhost:4000"
+config :boruta, Boruta.Oauth, issuer: "http://localhost:4000"

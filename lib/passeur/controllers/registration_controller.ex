@@ -28,6 +28,7 @@ defmodule Passeur.RegistrationController do
     Map.new(params, fn
       {key, value} when is_binary(key) and key in @known_keys ->
         {String.to_existing_atom(key), value}
+
       pair ->
         pair
     end)

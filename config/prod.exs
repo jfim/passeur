@@ -1,4 +1,3 @@
 import Config
 
-config :passeur, Passeur.Repo,
-  pool_size: 10
+config :passeur, Passeur.Repo, pool_size: 10

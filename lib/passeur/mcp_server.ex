@@ -4,7 +4,7 @@ defmodule Passeur.MCPServer do
     version: "0.1.0",
     capabilities: [:tools]
 
-  component Passeur.Tools.Hello
+  component(Passeur.Tools.Hello)
 
   @impl true
   def init(_client_info, frame) do

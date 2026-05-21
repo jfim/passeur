@@ -6,7 +6,8 @@ defmodule Passeur.MixProject do
       app: :passeur,
       version: "0.1.0",
       elixir: "~> 1.19",
-      description: "Self-hosted MCP server framework with OAuth 2.1 and Dynamic Client Registration",
+      description:
+        "Self-hosted MCP server framework with OAuth 2.1 and Dynamic Client Registration",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       package: package(),
@@ -33,7 +34,10 @@ defmodule Passeur.MixProject do
 
   defp deps do
     [
-      {:anubis_mcp, git: "https://github.com/jfim/anubis-mcp.git", branch: "non-upstreamed-fixes", override: true},
+      {:anubis_mcp,
+       git: "https://github.com/jfim/anubis-mcp.git",
+       branch: "non-upstreamed-fixes",
+       override: true},
       {:boruta, "~> 3.0.0-beta.4"},
       {:plug, "~> 1.19"},
       {:bandit, "~> 1.10"},

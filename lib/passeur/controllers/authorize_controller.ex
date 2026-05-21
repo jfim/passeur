@@ -48,7 +48,10 @@ defmodule Passeur.AuthorizeController do
   def authorize_error(conn, %Error{status: status, error: error, error_description: description}) do
     conn
     |> put_resp_content_type("application/json")
-    |> send_resp(status_code(status), Jason.encode!(%{error: error, error_description: description}))
+    |> send_resp(
+      status_code(status),
+      Jason.encode!(%{error: error, error_description: description})
+    )
   end
 
   defp redirect_to_login(conn) do

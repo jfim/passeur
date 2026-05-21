@@ -23,10 +23,17 @@ defmodule Passeur.TokenController do
   end
 
   @impl true
-  def token_error(conn, %Boruta.Oauth.Error{status: status, error: error, error_description: description}) do
+  def token_error(conn, %Boruta.Oauth.Error{
+        status: status,
+        error: error,
+        error_description: description
+      }) do
     conn
     |> put_resp_content_type("application/json")
-    |> send_resp(status_code(status), Jason.encode!(%{error: error, error_description: description}))
+    |> send_resp(
+      status_code(status),
+      Jason.encode!(%{error: error, error_description: description})
+    )
   end
 
   defp status_code(:bad_request), do: 400

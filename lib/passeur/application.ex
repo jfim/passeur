@@ -33,12 +33,13 @@ defmodule Passeur.Application do
 
     children = [
       Passeur.Repo,
-      {mcp_server,
-       transport: {:streamable_http, start: true},
-       # Tools like passeur_fetch can sit on a passe-partout network-idle wait
-       # for up to ~30s plus surrounding I/O — give them headroom over Anubis'
-       # 30s default before the MCP request is considered timed out.
-       request_timeout: 90_000},
+      {
+        mcp_server,
+        # Tools like passeur_fetch can sit on a passe-partout network-idle wait
+        # for up to ~30s plus surrounding I/O — give them headroom over Anubis'
+        # 30s default before the MCP request is considered timed out.
+        transport: {:streamable_http, start: true}, request_timeout: 90_000
+      },
       {Bandit,
        plug: Passeur.Router, port: port, thousand_island_options: [read_timeout: :infinity]}
     ]
