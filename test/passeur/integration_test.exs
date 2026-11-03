@@ -210,6 +210,35 @@ defmodule Passeur.IntegrationTest do
       assert location(conn) =~ "/login"
     end
 
+    test "authorize accepts a state longer than 255 characters", %{
+      client_id: client_id,
+      code_challenge: code_challenge
+    } do
+      login_body =
+        URI.encode_query(%{username: "admin", password: "test_password", return_to: "/"})
+
+      login_conn = post("/login", login_body, content_type: "application/x-www-form-urlencoded")
+
+      long_state = String.duplicate("a", 1500)
+
+      authorize_query =
+        URI.encode_query(%{
+          response_type: "code",
+          client_id: client_id,
+          redirect_uri: "http://localhost:3000/callback",
+          scope: "mcp:read",
+          state: long_state,
+          code_challenge: code_challenge,
+          code_challenge_method: "S256"
+        })
+
+      auth_conn = get("/oauth/authorize?#{authorize_query}", login_conn)
+      assert auth_conn.status == 302
+
+      %URI{query: redirect_query} = URI.parse(location(auth_conn))
+      assert URI.decode_query(redirect_query)["state"] == long_state
+    end
+
     test "full flow: login -> authorize -> token exchange", %{
       client_id: client_id,
       code_verifier: code_verifier,
